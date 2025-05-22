@@ -128,7 +128,27 @@ $(function () {
       },
     });
   });
-});
+
+    // Preparar los draggables
+    $(document).on('dragstart', '.word_bank_button', function (e) {
+      const text = $(this).text().trim();
+      console.log(text);
+      e.originalEvent.dataTransfer.setData('text/plain', text);
+    });
+
+    // Usar delegación para dragover y drop en los inputs creados después
+    $(document).on('dragover', '.input_field', function (e) {
+      e.preventDefault();
+    });
+
+    $(document).on('drop', '.input_field', function (e) {
+      e.preventDefault();
+      const text = e.originalEvent.dataTransfer.getData('text/plain');
+      console.log(text)
+      $(this).val(text);
+    });
+
+  });
 
 function displayStory(story) {
 //  const story = stories[Math.floor(Math.random() * stories.length)];
@@ -136,8 +156,9 @@ function displayStory(story) {
 
   $("#bank_words").empty();
   for (let i = 0; i < story.words.length; i++) {
-    let html = `<button class="word_bank_button">${story.words[i]}</button>`;
-    $("#bank_words").append(html);
+    let html = `<button class="word_bank_button" draggable="true">${story.words[i]}</button>`;
+    $("#bank_words").append(html);  
+console.log($(".word_bank_button").last().text());
   }
 
   $("#input_fields").empty();
@@ -157,5 +178,6 @@ function displayStory(story) {
     let input_number = id.split("_")[1];
     $(".rep_input").eq(input_number).html($(this).val());
   });
+
 
 }
